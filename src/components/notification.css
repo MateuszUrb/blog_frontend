@@ -1,0 +1,50 @@
+.notification {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem;
+	border-radius: 5px;
+	font-family: Arial, sans-serif;
+	font-size: 16px;
+	margin: 10px auto;
+	max-width: 400px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	animation: fadeIn 0.3s ease-in-out;
+}
+
+.notification.error {
+	background-color: #fdecea;
+	color: #d32f2f;
+	border: 1px solid #d32f2f;
+}
+
+.notification.success {
+	background-color: #edf7ed;
+	color: #2e7d32;
+	border: 1px solid #2e7d32;
+}
+
+.dismiss-btn {
+	background: none;
+	border: none;
+	font-size: 1.2rem;
+	color: inherit;
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+.dismiss-btn:hover {
+	opacity: 0.7;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

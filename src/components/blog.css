@@ -1,0 +1,184 @@
+/* General styles for Blog */
+.blog-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 20px;
+}
+
+.blog {
+	background-color: #f9f9f9;
+	border-radius: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	margin: 10px;
+	padding: 20px;
+	transition: transform 0.2s ease-in-out;
+}
+
+.blog:hover {
+	transform: scale(1.05);
+	/* Hover effect for blog items */
+}
+
+.blog-header {
+	margin-bottom: 15px;
+}
+
+.header-top {
+	display: flex;
+	justify-content: space-between;
+}
+
+.title-author {
+	display: flex;
+	flex-direction: column;
+}
+
+.blog-title {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: #333;
+}
+
+.blog-author {
+	font-size: 1.1em;
+	color: #555;
+}
+
+.blog-details {
+	margin-top: 15px;
+}
+
+.toggle-summary {
+	font-size: 1.2em;
+	cursor: pointer;
+}
+
+.details-content {
+	margin-top: 10px;
+}
+
+.details-content p {
+	font-size: 1em;
+	margin: 5px 0;
+}
+
+.blog-url {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
+}
+
+.blog-url a {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	text-overflow: ellipsis;
+	/* Optional for very long URLs */
+	display: block;
+	color: #0066cc;
+	text-decoration: none;
+}
+
+.blog-url a:hover {
+	text-decoration: underline;
+}
+
+.blog-likes {
+	display: flex;
+	gap: 0.6rem;
+	align-items: center;
+}
+
+.blog-btn {
+	border: 1px solid black;
+	background-color: transparent;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 1rem;
+
+	&:hover {
+		transition: background-color 300ms linear;
+		background-color: black;
+		color: white;
+	}
+
+}
+
+.blog-btn__delete {
+	border: 1px solid darkred;
+	background-color: transparent;
+	color: darkred;
+	font-size: 1rem;
+
+	&:hover {
+		background-color: darkred;
+	}
+}
+
+/* Media Queries for responsiveness */
+
+/* Mobile Devices */
+@media (min-width: 768px) {
+	.blog-container {
+		justify-content: center;
+		/* Center content on small screens */
+	}
+
+	.blog {
+		max-width: 100%;
+		/* Make each blog post take up full width on mobile */
+	}
+
+	.blog-title {
+		font-size: 1.3em;
+		/* Smaller title size */
+	}
+
+	.blog-author {
+		font-size: 1em;
+		/* Smaller author font size */
+	}
+
+	.details-content p {
+		font-size: 0.9em;
+		/* Smaller text on mobile */
+	}
+
+	.blog-url a {
+		font-size: 0.9em;
+	}
+}
+
+/* Tablets */
+@media (min-width: 1024px) {
+	.blog {
+		width: 48%;
+		/* Two blog posts per row on tablet screens */
+	}
+
+	.blog-title {
+		font-size: 1.4em;
+	}
+
+	.blog-author {
+		font-size: 1.1em;
+	}
+}
+
+/* Desktop Screens */
+@media (min-width: 1200px) {
+	.blog {
+		width: 30%;
+		/* Three blog posts per row on large screens */
+	}
+
+	.blog-title {
+		font-size: 1.8em;
+	}
+
+	.blog-author {
+		font-size: 1.2em;
+	}
+}
