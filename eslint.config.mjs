@@ -5,10 +5,12 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import vitest from "@vitest/eslint-plugin";
 import reactRefresh from "eslint-plugin-react-refresh";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
   jsdoc.configs["flat/recommended"],
   jsdoc.configs["flat/recommended-typescript-flavor"],
+  eslintConfigPrettier,
   {
     ignores: ["dist", "node_modules", ".eslint.config.mjs", "vite.config.js"],
   },
