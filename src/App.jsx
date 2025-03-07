@@ -1,97 +1,98 @@
-import React, { useState, useEffect } from "react";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import LoginUser from "./components/LoginUser";
-import Blogs from "./components/Blogs";
+import React, { useState, useEffect } from "react"
+import LoginUser from "./components/LoginUser"
+import Blogs from "./components/Blogs"
+import { useDispatch, useSelector } from "react-redux"
+import { getUser, getUserInfo, setUserInfo } from "./reducers/userReducer"
+import {
+  Routes,
+  Route,
+  useMatch,
+  useNavigate,
+  Navigate,
+} from "react-router-dom"
+import Users from "./components/Users"
+import ProtectedRoute from "./ProtectedRoute"
+import Menu from "./Menu"
 
 /** @typedef {import("./types/blog").BlogProps[] | []} BlogProps */
 /** @typedef {import("./types/blog").UserProps} UserProps */
+/** @typedef {import("./store").AppDispatch} AppDispatch */
 
 /**
  * @returns {React.JSX.Element} app
  */
 function App() {
-  const [blogs, setBlogs] = useState(/** @type {BlogProps}*/ ([]));
+  const navigate = useNavigate()
+  /** @type {AppDispatch} */
+  const dispatch = useDispatch()
+  const user = useSelector(
+    /** @param {import("./store").RootState} state */
+    (state) => state.user
+  )
+
   const [userCredentials, setUserCredentials] = useState({
     username: "",
     password: "",
-  });
-
-  const [user, setUser] = useState(/**@type {UserProps | null} */ (null));
-
-  /**
-   */
-  const [notification, setNotification] = useState({
-    message: /** @type {string|null} */ (null),
-    type: /** @type {string|null} */ (null),
-  });
+  })
 
   useEffect(() => {
-    try {
-      const loggedInUser = window.localStorage.getItem("loggedBlogUser");
-      if (loggedInUser) {
-        const user = JSON.parse(/**@type {string} */ (loggedInUser));
-        setUser(user);
-        if (user && user.token) {
-          blogService.setToken(user.token);
-        } else {
-          throw new Error("Invlid user token");
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        window.localStorage.clear();
-        setNotification({
-          message: "Token expired, please login ",
-          type: "error",
-        });
-        setTimeout(() => {
-          setNotification({ message: null, type: null });
-        }, 5000);
-      }
-    }
-  }, []);
+    dispatch(getUserInfo())
+  }, [dispatch])
 
   /**
    * @param {React.MouseEvent<HTMLButtonElement>} e - event
    */
   async function handleLogin(e) {
-    e.preventDefault();
+    e.preventDefault()
+    dispatch(setUserInfo(userCredentials))
+    navigate("/blogs")
+  }
 
-    try {
-      const userData = await loginService.login(userCredentials);
-      window.localStorage.setItem("loggedBlogUser", JSON.stringify(userData));
-      blogService.setToken(userData.token);
-      setUser(userData);
-    } catch (error) {
-      setNotification({ message: "wrong username or password", type: "error" });
-      setTimeout(() => {
-        setNotification({ message: null, type: null });
-      }, 5000);
-    }
+  function logOut() {
+    window.localStorage.clear()
+    navigate("/login", { replace: true })
+    setTimeout(() => window.location.reload(), 100)
   }
 
   return (
     <div>
-      {user === null ? (
-        <LoginUser
-          notification={notification}
-          userCredentials={userCredentials}
-          setUserCredentials={setUserCredentials}
-          handleLogin={handleLogin}
-        />
+      {user.username ? (
+        <Menu logOut={logOut}>
+          <Routes>
+            <Route path="/" element={<ProtectedRoute element={<Blogs />} />} />
+            <Route
+              path="/blogs"
+              element={<ProtectedRoute element={<Blogs />} />}
+            />
+
+            <Route
+              path="/blogs/:id"
+              element={<ProtectedRoute element={<Blogs />} />}
+            />
+            <Route
+              path="/users"
+              element={<ProtectedRoute element={<Users />} />}
+            />
+            <Route path="*" element={<Navigate to="/blogs" replace />} />
+          </Routes>
+        </Menu>
       ) : (
-        <Blogs
-          blogs={blogs}
-          setBlogs={setBlogs}
-          user={user}
-          notification={notification}
-          setNotification={setNotification}
-        />
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <LoginUser
+                userCredentials={userCredentials}
+                setUserCredentials={setUserCredentials}
+                handleLogin={handleLogin}
+              />
+            }
+          />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
       )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
