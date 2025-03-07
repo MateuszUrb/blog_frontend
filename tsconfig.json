@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "es2022",
+    "moduleResolution": "node",
     "checkJs": true,
     "allowJs": true,
     "noEmit": true,
@@ -7,9 +9,9 @@
     "jsx": "react-jsx",
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["dom", "es2022","dom.iterable"],
+    "lib": ["DOM", "es2022","dom.iterable"],
     "types": ["vitest/globals"]
   },
   "include": ["src/**/*", "./testSetup.js"],
-  "exclude": ["node_moudles", "src/**/*.test.*"]
+"exclude": ["node_modules", "src/**/*.test.*"]
 }
