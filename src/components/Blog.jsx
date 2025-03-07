@@ -1,80 +1,67 @@
-import React from "react";
-import blogService from "../services/blogs";
-import userService from "../services/users";
-import "./blog.css";
+import React, { useEffect, useState } from "react"
+import blogService from "../services/blogs"
+import userService from "../services/users"
+import "./blog.css"
+import { useDispatch, useSelector } from "react-redux"
+import { removeBlog, updateLike } from "../reducers/blogListReducer"
+import {
+  displayNotificaion,
+  setNotificaiton,
+} from "../reducers/notificationReducer"
 
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../types/blog").UserProps} UserProps */
+/** @typedef {import("../store").RootState} RootState */
+/** @typedef {import("../store").AppDispatch} AppDispatch */
 
 /**
  * @param {object} params - component parameters
  * @param {BlogProps} params.blog - blog post with title like etc.
  * @param {UserProps} params.user - logged in user info
- * @param {React.Dispatch<React.SetStateAction<BlogProps[]>>} params.setBlogs - blog post setter
  * @throws {Error} - message
  * @returns {React.ReactElement} blog
  */
-function Blog({ blog, setBlogs, user }) {
-  const currentUser = Array.isArray(user) ? user[0] : (user ?? "not found");
-  const blogOwner = blog?.users ? blog.users.map((u) => u.username) : [];
-  const isBlogOwner = blogOwner.includes(currentUser.username);
+function Blog({ blog, user }) {
+  /** @type {AppDispatch} */
+  const dispatch = useDispatch()
 
-  /**
-   * @returns {Promise<void>} - return promise implicitly
-   */
-  async function addLike() {
-    const updatedBlog = {
-      ...blog,
-      likes: (blog.likes ?? 0) + 1,
-    };
-    try {
-      const res = await blogService.update(blog.id, updatedBlog);
-      setBlogs((/** @type {BlogProps[]} */ prevState) =>
-        prevState.map(
-          (b) => (b.id === blog.id ? { ...res, users: blog.users } : b), // Preserve `users`
-        ),
-      );
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-    }
-  }
+  const [currentUser, setCurrentUser] = useState(null)
+  const [isBlogOwner, setIsBlogOwner] = useState(false)
 
-  /**
-   * @returns {Promise<(string|undefined)>} - logged in user id
-   */
-  async function getLoggedUserId() {
-    try {
-      const userId = await userService.getLogggedUser();
-      if (Array.isArray(userId)) {
-        return userId[0].id;
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-      }
-    }
-  }
-
-  /**
-   * @returns {Promise<void>} - delete result (void)
-   */
-  async function handleDelete() {
-    const userId = await getLoggedUserId();
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+  useEffect(() => {
+    async function fetchUser() {
       try {
-        if (userId !== undefined) {
-          await blogService.remove(blog.id, userId);
-          setBlogs((/** @type {BlogProps[]} */ prevState) =>
-            prevState.filter((b) => b.id !== blog.id),
-          );
-        }
+        const user = await userService.getLogggedUser()
+        setCurrentUser(Array.isArray(user) ? user[0] : user)
       } catch (error) {
         if (error instanceof Error) {
-          console.error(error.message);
+          dispatch(
+            displayNotificaion({ message: error.message, type: "error" })
+          )
         }
       }
+    }
+    fetchUser()
+  }, [dispatch])
+
+  useEffect(() => {
+    if (user && blog.users) {
+      setIsBlogOwner(blog.users.some((i) => i.username === user.username))
+    }
+  }, [user, blog])
+
+  function updateBlogLike() {
+    dispatch(updateLike(blog))
+  }
+  /**
+   * @returns {Promise<void>} - delete result (void)
+   * @throws {Error}
+   */
+  async function handleDelete() {
+    if (!currentUser) {
+      throw new Error("cannot find loggen-in user Id")
+    } else {
+      dispatch(removeBlog(currentUser.id, blog))
     }
   }
 
@@ -104,7 +91,7 @@ function Blog({ blog, setBlogs, user }) {
           </p>
           <div className="blog-likes">
             <p className="blog-like">Likes: {blog.likes}</p>
-            <button onClick={addLike} className="blog-btn">
+            <button onClick={updateBlogLike} className="blog-btn">
               like
             </button>
           </div>
@@ -112,8 +99,7 @@ function Blog({ blog, setBlogs, user }) {
             <div>
               <button
                 onClick={handleDelete}
-                className="blog-btn blog-btn__delete"
-              >
+                className="blog-btn blog-btn__delete">
                 remove
               </button>
             </div>
@@ -121,6 +107,6 @@ function Blog({ blog, setBlogs, user }) {
         </div>
       </details>
     </div>
-  );
+  )
 }
-export default Blog;
+export default Blog

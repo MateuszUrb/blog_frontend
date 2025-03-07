@@ -1,56 +1,28 @@
-import { useEffect, useState } from "react";
-import blogService from "../services/blogs";
+import React, { useState } from "react"
+import { useDispatch } from "react-redux"
+import { createBlog } from "../reducers/blogListReducer"
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../types/blog").UserProps} UserProps */
 
-/**
- * @param {object} params - parameters passed to competent
- * @param {React.Dispatch<React.SetStateAction<BlogProps[]>>} params.setBlogs - blog setter fn
- * @param {React.Dispatch<React.SetStateAction<
- * {message: string|null, type: string|null}>>} params.setNotification - notification setter fn
- * @returns {React.JSX.Element} - Jsx
- */
-function CreateBlog({ setBlogs, setNotification }) {
+function CreateBlog() {
+  const dispatch = useDispatch()
   const [blogPost, setBlogPost] = useState({
     title: "",
     author: "",
     url: "",
-  });
-  const [isFetching, setIsFetching] = useState(false);
-  useEffect(() => {
-    if (!isFetching) return;
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-    setIsFetching(false);
-  }, [isFetching, setBlogs]);
+  })
 
   /**
    * @param {React.FormEvent} e - event
    */
   async function handleCreateBlog(e) {
-    e.preventDefault();
-    try {
-      await blogService.create(blogPost);
-      setIsFetching(true);
-      setNotification({
-        message: `a new blog ${blogPost.title} by ${blogPost.author}`,
-        type: "success",
-      });
-      setBlogPost({
-        title: "",
-        author: "",
-        url: "",
-      });
-      setTimeout(() => {
-        setNotification({ message: null, type: null });
-      }, 5000);
-    } catch (error) {
-      if (error instanceof Error) {
-        setNotification({ message: error.message, type: "error" });
-        setTimeout(() => {
-          setNotification({ message: null, type: null });
-        }, 5000);
-      }
-    }
+    e.preventDefault()
+    dispatch(createBlog(blogPost))
+    setBlogPost({
+      title: "",
+      author: "",
+      url: "",
+    })
   }
   return (
     <>
@@ -69,7 +41,7 @@ function CreateBlog({ setBlogs, setNotification }) {
                 setBlogPost((prevState) => ({
                   ...prevState,
                   [e.target.name]: e.target.value,
-                }));
+                }))
               }}
             />
           </label>
@@ -87,7 +59,7 @@ function CreateBlog({ setBlogs, setNotification }) {
                 setBlogPost((prevState) => ({
                   ...prevState,
                   [e.target.name]: e.target.value,
-                }));
+                }))
               }}
             />
           </label>
@@ -105,7 +77,7 @@ function CreateBlog({ setBlogs, setNotification }) {
                 setBlogPost((prevState) => ({
                   ...prevState,
                   [e.target.name]: e.target.value,
-                }));
+                }))
               }}
             />
           </label>
@@ -113,7 +85,7 @@ function CreateBlog({ setBlogs, setNotification }) {
         <button type="submit">create</button>
       </form>
     </>
-  );
+  )
 }
 
-export default CreateBlog;
+export default CreateBlog

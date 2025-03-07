@@ -1,6 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Notification from "./Notification";
+import React from "react"
+import PropTypes from "prop-types"
+import Notification from "./Notification"
+import { useSelector } from "react-redux"
+import store from "../store"
+
+/** @typedef {ReturnType<typeof store.getState>} RootState */
 
 /**
  * @param {object} props - properties passed to component
@@ -9,21 +13,18 @@ import Notification from "./Notification";
  * @param {React.Dispatch<React.SetStateAction<
  * {username: string;
  * password: string;}>>} props.setUserCredentials - function used to set user Credentials
- * @param {{[key: string]: (string|null)}} props.notification - Notification
  * @returns {React.ReactElement} Login forum
  */
-function LoginUser({
-  userCredentials,
-  handleLogin,
-  setUserCredentials,
-  notification,
-}) {
+function LoginUser({ userCredentials, handleLogin, setUserCredentials }) {
+  const notification = useSelector(
+    /** @param {RootState} state */
+    (state) => state.notification.message
+  )
+
   return (
     <>
       <h1>Log in to application</h1>
-      {notification.message && (
-        <Notification message={notification.message} type="error" />
-      )}
+      {notification && <Notification />}
       <form>
         <div>
           <label htmlFor="username">
@@ -36,11 +37,11 @@ function LoginUser({
               onChange={(e) =>
                 setUserCredentials(
                   (
-                    /** @type {{username: string, password: string}} */ prevState,
+                    /** @type {{username: string, password: string}} */ prevState
                   ) => ({
                     ...prevState,
                     [e.target.name]: e.target.value,
-                  }),
+                  })
                 )
               }
             />
@@ -57,11 +58,11 @@ function LoginUser({
               onChange={(e) =>
                 setUserCredentials(
                   (
-                    /** @type {{username: string, password: string}} */ prevState,
+                    /** @type {{username: string, password: string}} */ prevState
                   ) => ({
                     ...prevState,
                     [e.target.name]: e.target.value,
-                  }),
+                  })
                 )
               }
             />
@@ -72,14 +73,13 @@ function LoginUser({
         </button>
       </form>
     </>
-  );
+  )
 }
 
 LoginUser.propTypes = {
   userCredentials: PropTypes.object.isRequired,
   handleLogin: PropTypes.func.isRequired,
   setUserCredentials: PropTypes.func.isRequired,
-  notification: PropTypes.object.isRequired,
-};
+}
 
-export default LoginUser;
+export default LoginUser

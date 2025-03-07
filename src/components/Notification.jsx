@@ -1,36 +1,42 @@
-import { useState, useEffect } from "react";
-import "./notification.css"; // External CSS file
+import React, { useState, useEffect } from "react"
+import { useSelector } from "react-redux"
+import "./notification.css"
 
 /**
- * @param {object} props - The properties object.
- * @param {string} props.message - The notification message to display.
- * @param {'success'|'error' } props.type - The type of the notification (e.g., "success", "error").
  * @returns {React.JSX.Element | null} The rendered notification component.
  */
-const Notification = ({ message, type }) => {
-  const [isVisible, setIsVisible] = useState(true);
+const Notification = () => {
+  const notification = useSelector(
+    /**
+     * @param {import("./LoginUser").RootState} state
+     */
+    (state) => state.notification
+  )
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setIsVisible(false);
-    }, 5000);
+      setIsVisible(false)
+    }, 5000)
 
-    return () => clearTimeout(timeout);
-  }, []);
+    return () => clearTimeout(timeout)
+  }, [])
 
   const notificationClass =
-    type === "error" ? "notification error" : "notification success";
+    notification.type === "error"
+      ? "notification error"
+      : "notification success"
 
-  if (!isVisible || !message) return null;
+  if (!isVisible || !notification.message) return null
 
   return (
     <div className={notificationClass}>
-      <p>{message}</p>
+      <p>{notification.message}</p>
       <button className="dismiss-btn" onClick={() => setIsVisible(false)}>
         ✕
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification
