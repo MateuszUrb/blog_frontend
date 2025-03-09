@@ -3,9 +3,10 @@ import Blog from "./Blog"
 import CreateBlog from "./CreateBlog"
 import Notification from "./Notification"
 import Togglable from "./Togglable"
-import "./blog.css"
+import "./blogs.css"
 import { useDispatch, useSelector } from "react-redux"
 import { initializeBlogs } from "../reducers/blogListReducer"
+import { Link } from "react-router-dom"
 
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../store").RootState} State */
@@ -52,7 +53,9 @@ function Blogs() {
       </Togglable>
       <div className="blog-container">
         {sortedBlogs.map((/** @type {BlogProps} */ blog) => (
-          <Blog key={blog.id} user={user} blog={blog} />
+          <li key={blog.id} className="blog-li">
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          </li>
         ))}
       </div>
     </>
