@@ -66,18 +66,17 @@ function Blog({ blog, user }) {
   }
 
   return (
-    <div className="blog">
-      <div className="blog-header">
+    <article className="blog">
+      <header className="blog-header">
         <div className="header-top">
           <div className="title-author">
-            <span className="blog-title">{blog.title}</span>
-            <div className="blog-author">by {blog.author}</div>
+            <h1 className="blog-title">{blog.title}</h1>
+            <p className="blog-author">by {blog.author}</p>
           </div>
         </div>
-      </div>
+      </header>
 
-      <details className="blog-details">
-        <summary className="toggle-summary">More Info</summary>
+      <section className="blog-details">
         <div className="details-content">
           <p className="blog-url">
             Url:{" "}
@@ -105,8 +104,8 @@ function Blog({ blog, user }) {
             </div>
           )}
         </div>
-      </details>
-    </div>
+      </section>
+    </article>
   )
 }
 export default Blog
