@@ -46,6 +46,7 @@ export function initializeBlogs() {
   return async (dispatch) => {
     try {
       const res = await blogService.getAll()
+
       if (!Array.isArray(res)) {
         throw new Error("Error while geting Blogs")
       } else {

@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useDispatch } from "react-redux"
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { createBlog } from "../reducers/blogListReducer"
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../types/blog").UserProps} UserProps */
@@ -11,13 +11,21 @@ function CreateBlog() {
     author: "",
     url: "",
   })
+  const user = useSelector(
+    /**@param {import("../store").RootState} state  */
+    (state) => state.user
+  )
 
   /**
    * @param {React.FormEvent} e - event
    */
   async function handleCreateBlog(e) {
     e.preventDefault()
-    dispatch(createBlog(blogPost))
+    const blogWithUser = {
+      ...blogPost,
+      users: user ? [user] : [],
+    }
+    dispatch(createBlog(blogWithUser))
     setBlogPost({
       title: "",
       author: "",
