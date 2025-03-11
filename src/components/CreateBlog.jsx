@@ -21,11 +21,7 @@ function CreateBlog() {
    */
   async function handleCreateBlog(e) {
     e.preventDefault()
-    const blogWithUser = {
-      ...blogPost,
-      users: user ? [user] : [],
-    }
-    dispatch(createBlog(blogWithUser))
+    dispatch(createBlog(blogPost))
     setBlogPost({
       title: "",
       author: "",

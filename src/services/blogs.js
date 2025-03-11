@@ -1,15 +1,15 @@
-import axios from "axios";
-const baseUrl = "/api/blogs";
+import axios from "axios"
+const baseUrl = "/api/blogs"
 /**
  * @typedef {import("../types/blog").BlogProps} BlogProps
  */
 
-let token = "";
+let token = ""
 /**
  * @param {string} newToken - fn: assign new token
  */
 function setToken(newToken) {
-  token = `Bearer ${newToken}`;
+  token = `Bearer ${newToken}`
 }
 
 /**
@@ -18,9 +18,9 @@ function setToken(newToken) {
 async function getAll() {
   let config = {
     headers: { Authorization: token },
-  };
-  const request = await axios.get(baseUrl, config);
-  return request.data;
+  }
+  const request = await axios.get(baseUrl, config)
+  return request.data
 }
 
 /**
@@ -30,9 +30,14 @@ async function getAll() {
 async function create(newBlog) {
   let config = {
     headers: { Authorization: token },
-  };
-  const res = await axios.post(baseUrl, newBlog, config);
-  return res.data;
+  }
+
+  try {
+    const res = await axios.post(baseUrl, newBlog, config)
+    return res.data
+  } catch (error) {
+    console.error("Error creating blog:", error.message ?? error)
+  }
 }
 
 /**
@@ -43,9 +48,9 @@ async function create(newBlog) {
 async function update(id, blog) {
   let config = {
     headers: { Authorization: token },
-  };
-  const res = await axios.put(`${baseUrl}/${id}`, blog, config);
-  return res.data;
+  }
+  const res = await axios.put(`${baseUrl}/${id}`, blog, config)
+  return res.data
 }
 
 /**
@@ -56,13 +61,13 @@ async function update(id, blog) {
 async function remove(id, userId) {
   let config = {
     headers: { Authorization: token },
-  };
+  }
 
   const res = await axios.delete(`${baseUrl}/${id}`, {
     ...config,
     data: { userId },
-  });
-  return res;
+  })
+  return res
 }
 
-export default { getAll, create, setToken, update, remove };
+export default { getAll, create, setToken, update, remove }

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { displayNotificaion } from "./notificationReducer"
 import blogService from "../services/blogs"
+import userService from "../services/users"
 import users from "../services/users"
 
 /**
@@ -60,7 +61,7 @@ export function initializeBlogs() {
       if (error instanceof Error) {
         dispatch(
           displayNotificaion({
-            message: "Error: fialed fetching blogs",
+            message: "Error: failed fetching blogs",
             type: "error",
           })
         )
@@ -77,7 +78,19 @@ export function createBlog(blogPost) {
   return async (dispatch) => {
     try {
       const blog = await blogService.create(blogPost)
-      dispatch(appendBlog(blog))
+      const userArr = await userService.getLogggedUser()
+
+      const users = userArr.map((user) => ({
+        username: user.username,
+        name: user.name,
+        id: user.id,
+      }))
+
+      const newBlog = {
+        ...blog,
+        users,
+      }
+      dispatch(appendBlog(newBlog))
       dispatch(
         displayNotificaion({
           message: `a new blog ${blogPost.title} by ${blogPost.author}`,
@@ -107,6 +120,7 @@ export function updateLike(blog) {
       }
       const res = await blogService.update(blog.id, updatedBlog)
       const currentUser = blog.users || []
+
       const updatedWithUsers = { ...res, users: currentUser }
       dispatch(addLike(updatedWithUsers))
     } catch (error) {
