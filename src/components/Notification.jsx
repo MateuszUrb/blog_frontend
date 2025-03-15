@@ -8,7 +8,7 @@ import "./notification.css"
 const Notification = () => {
   const notification = useSelector(
     /**
-     * @param {import("./LoginUser").RootState} state
+     * @param {import("../store/index").RootState} state
      */
     (state) => state.notification
   )

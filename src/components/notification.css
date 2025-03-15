@@ -1,36 +1,55 @@
+:root {
+	--color-error-bg: #fdecea;
+	--color-error-text: #d32f2f;
+	--color-success-bg: #edf7ed;
+	--color-success-text: #2e7d32;
+	--color-shadow: rgba(0, 0, 0, 0.1);
+	--font-size-base: 1rem;
+	--font-size-dismiss: 1.2rem;
+	--spacing-base: 1rem;
+	--spacing-small: 0.625rem;
+	/* 10px converted to rem */
+	--border-radius: 0.3125rem;
+	/* 5px converted to rem */
+	--max-width: 25rem;
+	/* 400px converted to rem */
+	--animation-duration: 0.3s;
+}
+
 .notification {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 1rem;
-	border-radius: 5px;
+	padding: var(--spacing-base);
+	border-radius: var(--border-radius);
 	font-family: Arial, sans-serif;
-	font-size: 16px;
-	margin: 10px auto;
-	max-width: 400px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	animation: fadeIn 0.3s ease-in-out;
+	font-size: var(--font-size-base);
+	margin: var(--spacing-small) auto;
+	max-width: var(--max-width);
+	box-shadow: 0 0.25rem 0.375rem var(--color-shadow);
+	/* 4px 6px converted to rem */
+	animation: fadeIn var(--animation-duration) ease-in-out;
 }
 
 .notification.error {
-	background-color: #fdecea;
-	color: #d32f2f;
-	border: 1px solid #d32f2f;
+	background-color: var(--color-error-bg);
+	color: var(--color-error-text);
+	border: 1px solid var(--color-error-text);
 }
 
 .notification.success {
-	background-color: #edf7ed;
-	color: #2e7d32;
-	border: 1px solid #2e7d32;
+	background-color: var(--color-success-bg);
+	color: var(--color-success-text);
+	border: 1px solid var(--color-success-text);
 }
 
 .dismiss-btn {
 	background: none;
 	border: none;
-	font-size: 1.2rem;
+	font-size: var(--font-size-dismiss);
 	color: inherit;
 	cursor: pointer;
-	margin-left: 10px;
+	margin-left: var(--spacing-small);
 }
 
 .dismiss-btn:hover {
@@ -40,7 +59,8 @@
 @keyframes fadeIn {
 	from {
 		opacity: 0;
-		transform: translateY(-10px);
+		transform: translateY(-0.625rem);
+		/* 10px converted to rem */
 	}
 
 	to {
