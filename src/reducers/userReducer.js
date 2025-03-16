@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 import { displayNotificaion } from "./notificationReducer"
 import blogService from "../services/blogs"
 import loginService from "../services/login"
+import axios from "axios"
 
 /**
  * @typedef {import("../store").RootState} RootState
@@ -66,13 +67,31 @@ export function setUserInfo(usrCredentials) {
   return async (dispatch) => {
     try {
       const userData = await loginService.login(usrCredentials)
+
+      if (!userData || !userData.token) {
+        throw new Error("invalid loing response: token is missing")
+      }
       window.localStorage.setItem("loggedBlogUser", JSON.stringify(userData))
       blogService.setToken(userData.token)
       dispatch(setUser(userData))
     } catch (error) {
+      let errorMessage = "Wrong username or password"
+
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.error || errorMessage
+        console.error(
+          "Axios login error:",
+          error.response?.data || error.message
+        )
+      } else if (error instanceof Error) {
+        console.error("Unexpected login error:", error.message)
+      } else {
+        console.error("Unknown login error:", error)
+      }
+
       dispatch(
         displayNotificaion({
-          message: "wrong username or password",
+          message: errorMessage,
           type: "error",
         })
       )

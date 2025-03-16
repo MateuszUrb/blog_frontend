@@ -22,6 +22,13 @@ const blogListSlice = createSlice({
     setBlogs(state, action) {
       return action.payload
     },
+    appendComment(state, action) {
+      state.map((blog) => {
+        if (blog.id === action.payload.blogId) {
+          blog.comments.push(action.payload.comments)
+        }
+      })
+    },
     appendBlog(state, action) {
       const newBlog = action.payload
       if (!newBlog.users) {
@@ -80,29 +87,57 @@ export function createBlog(blogPost) {
       const blog = await blogService.create(blogPost)
       const userArr = await userService.getLogggedUser()
 
-      const users = userArr.map((user) => ({
-        username: user.username,
-        name: user.name,
-        id: user.id,
-      }))
+      if (userArr && Array.isArray(userArr)) {
+        const users = userArr.map((user) => ({
+          username: user.username,
+          name: user.name,
+          id: user.id,
+        }))
 
-      const newBlog = {
-        ...blog,
-        users,
+        const newBlog = {
+          ...blog,
+          users,
+        }
+        dispatch(appendBlog(newBlog))
+        dispatch(
+          displayNotificaion({
+            message: `a new blog ${blogPost.title} by ${blogPost.author}`,
+            type: "success",
+          })
+        )
       }
-      dispatch(appendBlog(newBlog))
-      dispatch(
-        displayNotificaion({
-          message: `a new blog ${blogPost.title} by ${blogPost.author}`,
-          type: "success",
-        })
-      )
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message)
 
         dispatch(displayNotificaion({ message: error.message, type: "error" }))
       }
+    }
+  }
+}
+
+/**
+ * @param {string|undefined} comment
+ * @returns {(dispatch: AppDispatch, getState: () => RootState) => Promise<void>}
+ * @param {string} blogId
+ */
+export function createComment(comment, blogId) {
+  return async (dispatch) => {
+    if (!comment) {
+      dispatch(
+        displayNotificaion({ message: `Comment is empty`, type: "error" })
+      )
+      return
+    }
+    try {
+      const res = await blogService.addComment(blogId, comment)
+      const comments = res.comments.at(-1)
+      dispatch(appendComment({ blogId, comments }))
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred"
+      console.error("Error adding comment:", error)
+      dispatch(displayNotificaion({ message: errorMessage, type: "error" }))
     }
   }
 }
@@ -135,28 +170,35 @@ export function updateLike(blog) {
 /**
  * @param {string} userId
  * @param {import("../types/blog").BlogProps} blog
- * @returns {(dispatch: AppDispatch, getState: () => RootState) => Promise<void>}
+ * @returns {(dispatch: AppDispatch)  => Promise<boolean>}
  */
 export function removeBlog(userId, blog) {
   return async (dispatch) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      try {
-        if (userId !== undefined) {
-          await blogService.remove(blog.id, userId)
-          dispatch(deleteBlog(blog.id))
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error(error.message)
-          dispatch(
-            displayNotificaion({ message: error.message, type: "error" })
-          )
-        }
+    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      return false
+    }
+    try {
+      if (userId !== undefined) {
+        await blogService.remove(blog.id, userId)
+        dispatch(deleteBlog(blog.id))
+        dispatch(
+          displayNotificaion({
+            message: "Blog removed successfully",
+            type: "success",
+          })
+        )
+        return true
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+        dispatch(displayNotificaion({ message: error.message, type: "error" }))
       }
     }
+    return false
   }
 }
 
-export const { setBlogs, appendBlog, addLike, deleteBlog } =
+export const { setBlogs, appendBlog, addLike, deleteBlog, appendComment } =
   blogListSlice.actions
 export default blogListSlice.reducer
