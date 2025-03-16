@@ -1,7 +1,5 @@
 import React, { useEffect } from "react"
-import Blog from "./Blog"
 import CreateBlog from "./CreateBlog"
-import Notification from "./Notification"
 import Togglable from "./Togglable"
 import "./blogs.css"
 import { useDispatch, useSelector } from "react-redux"
@@ -24,15 +22,6 @@ function Blogs() {
     /** @param {State} state */
     (state) => state.blogList
   )
-  const notification = useSelector(
-    /** @param {State} state */
-    (state) => state.notification.message
-  )
-
-  const user = useSelector(
-    /** @param {State} state */
-    (state) => state.user
-  )
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -47,7 +36,6 @@ function Blogs() {
   return (
     <>
       <h1>Blogs</h1>
-      {notification && <Notification />}
       <Togglable buttonLabel="new note">
         <CreateBlog />
       </Togglable>

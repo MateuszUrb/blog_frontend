@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { createBlog } from "../reducers/blogListReducer"
+import { displayNotificaion } from "../reducers/notificationReducer"
+
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../types/blog").UserProps} UserProps */
 
+/**
+ * @returns {React.JSX.Element}
+ */
 function CreateBlog() {
   const dispatch = useDispatch()
   const [blogPost, setBlogPost] = useState({
@@ -21,6 +26,22 @@ function CreateBlog() {
    */
   async function handleCreateBlog(e) {
     e.preventDefault()
+    const { title, author, url } = blogPost
+    const missingFields = []
+
+    if (!title.trim()) missingFields.push("Title")
+    if (!author.trim()) missingFields.push("Author")
+    if (!url.trim()) missingFields.push("URL")
+
+    if (missingFields.length > 0) {
+      dispatch(
+        displayNotificaion({
+          message: `Error: Please fill in the following field(s): ${missingFields.join(", ")}`,
+          type: "error",
+        })
+      )
+      return
+    }
     dispatch(createBlog(blogPost))
     setBlogPost({
       title: "",
