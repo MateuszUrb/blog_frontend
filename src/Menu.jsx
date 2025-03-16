@@ -1,5 +1,7 @@
 import { useSelector } from "react-redux"
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink } from "react-router-dom"
+import "./menu.css"
+import React from "react"
 
 /**
  * @param {object} props
@@ -7,27 +9,22 @@ import { NavLink, useNavigate } from "react-router-dom"
  * @param {import("react").MouseEventHandler<HTMLButtonElement>} props.logOut
  */
 function Menu(props) {
-  const navigate = useNavigate()
   const user = useSelector(
     /** @param {import("./store/index").RootState} state */
     (state) => state.user
   )
 
-  const style = {
-    marginLeft: "1rem",
-    display: "flex",
-    alignContent: "flex-start",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    columnGap: "1rem",
-  }
   return (
     <>
-      <div style={style}>
-        <NavLink to="/blogs">blogs</NavLink>
-        <NavLink to="/users">users</NavLink>
-        <p>{user.name} logged in</p>
-        <button onClick={props.logOut}>Log Out</button>
+      <div className="menu">
+        <div className="menu-links">
+          <NavLink to="/blogs">blogs</NavLink>
+          <NavLink to="/users">users</NavLink>
+        </div>
+        <div className="menu-user">
+          <p>{user.name} logged in</p>
+          <button onClick={props.logOut}>Log Out</button>
+        </div>
       </div>
       {props.children}
     </>

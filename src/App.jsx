@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import Notification from "./components/Notification"
 import LoginUser from "./components/LoginUser"
 import Blogs from "./components/Blogs"
 import { useDispatch, useSelector } from "react-redux"
@@ -13,9 +14,13 @@ import {
 import Users from "./components/Users"
 import ProtectedRoute from "./ProtectedRoute"
 import Menu from "./Menu"
+import Blog from "./components/Blog"
+import User from "./components/User"
+import { persistor } from "./store"
 
 /** @typedef {import("./types/blog").BlogProps[] | []} BlogProps */
 /** @typedef {import("./types/blog").UserProps} UserProps */
+/** @typedef {import("./store/index").RootState} RootState */
 /** @typedef {import("./store").AppDispatch} AppDispatch */
 
 /**
@@ -25,18 +30,32 @@ function App() {
   const navigate = useNavigate()
   /** @type {AppDispatch} */
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true)
+
   const user = useSelector(
     /** @param {import("./store").RootState} state */
     (state) => state.user
   )
+  const blogs = useSelector(
+    /** @param {import("./store").RootState} state */
+    (state) => state.blogList
+  )
 
+  const notification = useSelector(
+    /** @param {RootState} state */
+    (state) => state.notification.message
+  )
   const [userCredentials, setUserCredentials] = useState({
     username: "",
     password: "",
   })
 
   useEffect(() => {
-    dispatch(getUserInfo())
+    async function fetchUserInfo() {
+      dispatch(getUserInfo())
+      setLoading(false)
+    }
+    fetchUserInfo()
   }, [dispatch])
 
   /**
@@ -50,29 +69,54 @@ function App() {
 
   function logOut() {
     window.localStorage.clear()
+    persistor.purge()
     navigate("/login", { replace: true })
     setTimeout(() => window.location.reload(), 100)
   }
 
+  const matchBlog = useMatch("/blogs/:id")
+  const blog = matchBlog
+    ? blogs.find((b) => b.id === matchBlog.params.id)
+    : null
+
+  if (loading) return <div>Loading...</div>
+
   return (
     <div>
+      {notification && <Notification />}
       {user.username ? (
         <Menu logOut={logOut}>
           <Routes>
-            <Route path="/" element={<ProtectedRoute element={<Blogs />} />} />
+            <Route
+              path="/blogs/:id"
+              element={
+                <ProtectedRoute
+                  element={
+                    blog ? (
+                      <Blog blog={blog} user={user} />
+                    ) : (
+                      <p>Blog not found</p>
+                    )
+                  }
+                />
+              }
+            />
+
+            <Route
+              path="/users/:author"
+              element={<ProtectedRoute element={<User />} />}
+            />
             <Route
               path="/blogs"
               element={<ProtectedRoute element={<Blogs />} />}
             />
 
             <Route
-              path="/blogs/:id"
-              element={<ProtectedRoute element={<Blogs />} />}
-            />
-            <Route
               path="/users"
               element={<ProtectedRoute element={<Users />} />}
             />
+
+            <Route path="/" element={<ProtectedRoute element={<Blogs />} />} />
             <Route path="*" element={<Navigate to="/blogs" replace />} />
           </Routes>
         </Menu>

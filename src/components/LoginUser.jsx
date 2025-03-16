@@ -1,10 +1,5 @@
 import React from "react"
 import PropTypes from "prop-types"
-import Notification from "./Notification"
-import { useSelector } from "react-redux"
-import store from "../store"
-
-/** @typedef {ReturnType<typeof store.getState>} RootState */
 
 /**
  * @param {object} props - properties passed to component
@@ -16,15 +11,9 @@ import store from "../store"
  * @returns {React.ReactElement} Login forum
  */
 function LoginUser({ userCredentials, handleLogin, setUserCredentials }) {
-  const notification = useSelector(
-    /** @param {RootState} state */
-    (state) => state.notification.message
-  )
-
   return (
     <>
       <h1>Log in to application</h1>
-      {notification && <Notification />}
       <form>
         <div>
           <label htmlFor="username">
