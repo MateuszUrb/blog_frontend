@@ -12,45 +12,127 @@ function setToken(newToken) {
   token = `Bearer ${newToken}`
 }
 
-/**
- * @returns {Promise<BlogProps[]>} - all blogs
- */
-async function getAll() {
-  let config = {
+const getConfig = () => {
+  if (!token) {
+    console.error("Authorization token missing")
+  }
+  return {
     headers: { Authorization: token },
   }
-  const request = await axios.get(baseUrl, config)
-  return request.data
+}
+
+/**
+ * @returns {Promise<BlogProps[] | undefined>} - all blogs
+ */
+async function getAll() {
+  if (!token) {
+    console.error("Authorization token missing")
+  }
+  try {
+    const config = getConfig()
+    const request = await axios.get(baseUrl, config)
+    return request.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Axios error getting blogs:",
+        error.response?.data || error.message
+      )
+    } else if (error instanceof Error) {
+      console.error("Unexpected error getting blogs:", error.message)
+    } else {
+      console.error("Unknown error getting blogs:", error)
+    }
+  }
 }
 
 /**
  * @param {BlogProps} newBlog - client req with data
- * @returns {Promise<BlogProps>} - blogs with newly created one
+ * @returns {Promise<BlogProps | undefined>} - blogs with newly created one
  */
 async function create(newBlog) {
-  let config = {
-    headers: { Authorization: token },
+  if (!token) {
+    console.error("Authorization token missing")
   }
 
   try {
+    const config = getConfig()
     const res = await axios.post(baseUrl, newBlog, config)
     return res.data
   } catch (error) {
-    console.error("Error creating blog:", error.message ?? error)
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Axios error creating blog:",
+        error.response?.data || error.message
+      )
+    } else if (error instanceof Error) {
+      console.error("Unexpected error creating blog:", error.message)
+    } else {
+      console.error("Unknown error creating blog:", error)
+    }
   }
 }
 
 /**
  * @param {string} id - blog id
  * @param {BlogProps} blog - blog to update
- * @returns {Promise<BlogProps>} - updated blog
+ * @returns {Promise<BlogProps | undefined>} - updated blog
  */
 async function update(id, blog) {
-  let config = {
-    headers: { Authorization: token },
+  if (!token) {
+    console.error("Authorization token missing")
   }
-  const res = await axios.put(`${baseUrl}/${id}`, blog, config)
-  return res.data
+
+  try {
+    const config = getConfig()
+    const res = await axios.put(`${baseUrl}/${id}`, blog, config)
+    return res.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Axios error updating blog:",
+        error.response?.data || error.message
+      )
+    } else if (error instanceof Error) {
+      console.error("Unexpected error updating blog:", error.message)
+    } else {
+      console.error("Unknown error updating blog:", error)
+    }
+  }
+}
+
+/**
+ * @param {string} id
+ * @param {string} comment
+ */
+async function addComment(id, comment) {
+  if (!token) {
+    console.error("Authorization token missing")
+    return
+  }
+
+  try {
+    const config = getConfig()
+
+    const res = await axios.post(
+      `${baseUrl}/${id}/comments`,
+      { comment },
+      config
+    )
+
+    return res.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Axios error creating comment:",
+        error.response?.data || error.message
+      )
+    } else if (error instanceof Error) {
+      console.error("Unexpected error creating comment:", error.message)
+    } else {
+      console.error("Unknown error creating  comment:", error)
+    }
+  }
 }
 
 /**
@@ -59,15 +141,30 @@ async function update(id, blog) {
  * @returns {Promise<unknown>} - result of deletino either error obj or 204 no content
  */
 async function remove(id, userId) {
-  let config = {
-    headers: { Authorization: token },
+  if (!token) {
+    console.error("Authorization token missing")
   }
 
-  const res = await axios.delete(`${baseUrl}/${id}`, {
-    ...config,
-    data: { userId },
-  })
-  return res
+  try {
+    const config = getConfig()
+
+    const res = await axios.delete(`${baseUrl}/${id}`, {
+      ...config,
+      data: { userId },
+    })
+    return res
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Axios error deleting blog:",
+        error.response?.data || error.message
+      )
+    } else if (error instanceof Error) {
+      console.error("Unexpected error deleting blog:", error.message)
+    } else {
+      console.error("Unknown error deleting blog:", error)
+    }
+  }
 }
 
-export default { getAll, create, setToken, update, remove }
+export default { getAll, create, setToken, update, remove, addComment }

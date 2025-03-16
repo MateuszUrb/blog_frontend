@@ -1,9 +1,23 @@
+type BlogUsers = {
+  username: string
+  name: string
+  id: string
+}
+
+type Comments = {
+  comment: string
+  id: string
+  created: string
+  author?: string
+}
+
 export type BlogProps = {
   title: string
   author: string
   likes: number
   url: string
-  users: UserProps[]
+  comments: Comments[]
+  users: BlogUsers[]
   id: string
 }
 
