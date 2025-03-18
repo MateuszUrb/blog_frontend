@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
-import "./menu.css"
 import React from "react"
+import "./menu.css"
 
 /**
  * @param {object} props
@@ -16,16 +16,22 @@ function Menu(props) {
 
   return (
     <>
-      <div className="menu">
-        <div className="menu-links">
-          <NavLink to="/blogs">blogs</NavLink>
-          <NavLink to="/users">users</NavLink>
-        </div>
-        <div className="menu-user">
+      <header className="menu">
+        <nav className="menuLinks">
+          <ul>
+            <li>
+              <NavLink to="/blogs">blogs</NavLink>
+            </li>
+            <li>
+              <NavLink to="/users">users</NavLink>
+            </li>
+          </ul>
+        </nav>
+        <div className="menuUser">
           <p>{user.name} logged in</p>
           <button onClick={props.logOut}>Log Out</button>
         </div>
-      </div>
+      </header>
       {props.children}
     </>
   )
