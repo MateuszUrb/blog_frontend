@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import blogService from "../services/blogs"
 import userService from "../services/users"
-import "./blog.css"
 import { useDispatch, useSelector } from "react-redux"
 import { removeBlog, updateLike } from "../reducers/blogListReducer"
 import {
@@ -10,6 +9,7 @@ import {
 } from "../reducers/notificationReducer"
 import { useNavigate } from "react-router-dom"
 import Comments from "./Comments"
+import style from "./blog.module.css"
 
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../types/blog").UserProps} UserProps */
@@ -66,7 +66,7 @@ function Blog({ blog, user }) {
     dispatch(updateLike(blog))
   }
   /**
-   * @returns {Promise<void>} - delete result (void)
+   * @returns {Promise<void>}
    * @throws {Error}
    */
   async function handleDelete() {
@@ -81,19 +81,19 @@ function Blog({ blog, user }) {
   }
   return (
     <>
-      <article className="blog">
-        <header className="blog-header">
-          <div className="header-top">
-            <div className="title-author">
-              <h1 className="blog-title">{blog.title}</h1>
-              <p className="blog-author">by {blog.author}</p>
+      <article className={style.blog}>
+        <header className={style.blogHeader}>
+          <div className={style.headerTop}>
+            <div className={style.titleAuthor}>
+              <h1 className={style.blogTitle}>{blog.title}</h1>
+              <p className={style.blogAuthor}>by {blog.author}</p>
             </div>
           </div>
         </header>
 
-        <section className="blog-details">
-          <div className="details-content">
-            <p className="blog-url">
+        <section className={style.blogDetails}>
+          <div className={style.detailsContent}>
+            <p className={style.blogUrl}>
               Url:{" "}
               {blog.url === "none" ? (
                 <span>Missing url</span>
@@ -103,25 +103,27 @@ function Blog({ blog, user }) {
                 </a>
               )}
             </p>
-            <div className="blog-likes">
-              <p className="blog-like">Likes: {blog.likes}</p>
-              <button onClick={updateBlogLike} className="blog-btn">
-                like
-              </button>
-            </div>
-            {isBlogOwner && (
-              <div>
-                <button
-                  onClick={handleDelete}
-                  className="blog-btn blog-btn__delete">
-                  remove
+            <div className={style.blogBtnGroup}>
+              <div className={style.blogLikes}>
+                <p className={style.blogLike}>Likes: {blog.likes}</p>
+                <button onClick={updateBlogLike} className={style.blogBtn}>
+                  like
                 </button>
               </div>
-            )}
+              {isBlogOwner && (
+                <div>
+                  <button
+                    onClick={handleDelete}
+                    className={`${style.blogBtn} ${style.blogBtnDelete}`}>
+                    remove
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </section>
-        <Comments blog={blog} />
       </article>
+      <Comments blog={blog} />
     </>
   )
 }

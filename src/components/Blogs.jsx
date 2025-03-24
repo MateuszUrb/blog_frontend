@@ -1,10 +1,10 @@
 import React, { useEffect } from "react"
 import CreateBlog from "./CreateBlog"
 import Togglable from "./Togglable"
-import "./blogs.css"
 import { useDispatch, useSelector } from "react-redux"
 import { initializeBlogs } from "../reducers/blogListReducer"
 import { Link } from "react-router-dom"
+import style from "./blogs.module.css"
 
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../store").RootState} State */
@@ -34,19 +34,21 @@ function Blogs() {
   })
 
   return (
-    <>
-      <h1>Blogs</h1>
-      <Togglable buttonLabel="new note">
+    <div className={style.blogsContainer}>
+      <header>
+        <h1>Blogs</h1>
+      </header>
+      <Togglable buttonLabel="new blog">
         <CreateBlog />
       </Togglable>
-      <div className="blog-container">
+      <div className={style.blogs}>
         {sortedBlogs.map((/** @type {BlogProps} */ blog) => (
-          <li key={blog.id} className="blog-li">
+          <li key={blog.id} className={style.blogList}>
             <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
           </li>
         ))}
       </div>
-    </>
+    </div>
   )
 }
 

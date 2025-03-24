@@ -1,4 +1,4 @@
-import "./comments.css"
+import style from "./comments.module.css"
 import React, { useRef, useState } from "react"
 import { useDispatch } from "react-redux"
 import { createComment } from "../reducers/blogListReducer"
@@ -41,9 +41,9 @@ function Comments({ blog }) {
   }
 
   return (
-    <section className="comments">
+    <section className={style.comments}>
       <h1>Comments</h1>
-      <form className="comments-add" onSubmit={handleCreateComment}>
+      <form className={style.commentsAdd} onSubmit={handleCreateComment}>
         <textarea
           ref={commentRef}
           id="commentInput"
@@ -55,14 +55,14 @@ function Comments({ blog }) {
       </form>
 
       {blog.comments.length > 0 ? (
-        <ul className="comments-list">
+        <ul className={style.commentsList}>
           {blog.comments.map((comment) => (
-            <li key={comment.id} className="comment-item">
-              <div className="comment-header">
-                <span className="comment-author">
+            <li key={comment.id} className={style.commentItem}>
+              <div className={style.commentHeader}>
+                <span className={style.commentAuthor}>
                   {comment.author ? comment.author : "Anonymous"}
                 </span>{" "}
-                <span className="comment-date">{comment.created}</span>
+                <span className={style.commentDate}>{comment.created}</span>
               </div>
               <p>{comment.comment}</p>
             </li>

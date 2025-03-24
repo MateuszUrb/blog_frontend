@@ -1,0 +1,15 @@
+:root {
+	--red: #d32f2f;
+	--white: #F8FAFC;
+	--primary-color: #4DA1A9;
+	--secondary-color: #252A34;
+	--cta-color: #FF2E63;
+	--button-bd: #211C84;
+	--text-color: #EAEAEA;
+	--font-family: Arial, sans-serif;
+	--primary-hover-color: #4338ca;
+	--border-radius: 5px;
+
+	--padding: 0.60rem;
+	--font-family: Arial, sans-serif;
+}

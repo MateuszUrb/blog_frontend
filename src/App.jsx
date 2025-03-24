@@ -17,6 +17,8 @@ import Menu from "./Menu"
 import Blog from "./components/Blog"
 import User from "./components/User"
 import { persistor } from "./store"
+import "./variables.css"
+import style from "./app.module.css"
 
 /** @typedef {import("./types/blog").BlogProps[] | []} BlogProps */
 /** @typedef {import("./types/blog").UserProps} UserProps */
@@ -53,6 +55,7 @@ function App() {
   useEffect(() => {
     async function fetchUserInfo() {
       dispatch(getUserInfo())
+
       setLoading(false)
     }
     fetchUserInfo()
@@ -79,47 +82,52 @@ function App() {
     ? blogs.find((b) => b.id === matchBlog.params.id)
     : null
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <Loading />
 
   return (
-    <div>
+    <div className={style.container}>
       {notification && <Notification />}
       {user.username ? (
-        <Menu logOut={logOut}>
-          <Routes>
-            <Route
-              path="/blogs/:id"
-              element={
-                <ProtectedRoute
-                  element={
-                    blog ? (
-                      <Blog blog={blog} user={user} />
-                    ) : (
-                      <p>Blog not found</p>
-                    )
-                  }
-                />
-              }
-            />
+        <div className={style.app}>
+          <Menu logOut={logOut}>
+            <Routes>
+              <Route
+                path="/blogs/:id"
+                element={
+                  <ProtectedRoute
+                    element={
+                      blog ? (
+                        <Blog blog={blog} user={user} />
+                      ) : (
+                        <p>Blog not found</p>
+                      )
+                    }
+                  />
+                }
+              />
 
-            <Route
-              path="/users/:author"
-              element={<ProtectedRoute element={<User />} />}
-            />
-            <Route
-              path="/blogs"
-              element={<ProtectedRoute element={<Blogs />} />}
-            />
+              <Route
+                path="/users/:author"
+                element={<ProtectedRoute element={<User />} />}
+              />
+              <Route
+                path="/blogs"
+                element={<ProtectedRoute element={<Blogs />} />}
+              />
 
-            <Route
-              path="/users"
-              element={<ProtectedRoute element={<Users />} />}
-            />
+              <Route
+                path="/users"
+                element={<ProtectedRoute element={<Users />} />}
+              />
 
-            <Route path="/" element={<ProtectedRoute element={<Blogs />} />} />
-            <Route path="*" element={<Navigate to="/blogs" replace />} />
-          </Routes>
-        </Menu>
+              <Route
+                path="/"
+                element={<ProtectedRoute element={<Blogs />} />}
+              />
+              <Route path="*" element={<Navigate to="/blogs" replace />} />
+            </Routes>
+          </Menu>
+        </div>
       ) : (
         <Routes>
           <Route
@@ -135,6 +143,17 @@ function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       )}
+    </div>
+  )
+}
+
+/**
+ * @returns {React.JSX.Element}
+ */
+function Loading() {
+  return (
+    <div>
+      <h1>Loading...</h1>
     </div>
   )
 }
