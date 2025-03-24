@@ -1,0 +1,20 @@
+.container {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	grid-template-areas:
+		'. app app app app app app app app app app . '
+		'. app app app app app app app app app app . '
+		'. app app app app app app app app app app . ';
+}
+
+.app {
+	grid-area: app;
+	display: grid;
+	gap: 2rem 0;
+	grid-template-areas:
+		'menu menu menu menu menu menu menu menu menu menu menu menu'
+		'menu menu menu menu menu menu menu menu menu menu menu menu'
+		'content content content content content content content content content content content content';
+
+
+}

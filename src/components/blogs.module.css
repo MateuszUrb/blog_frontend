@@ -1,0 +1,71 @@
+.blogsContainer {
+	grid-area: content;
+	display: grid;
+	grid-template-areas:
+		"title title . . . . . . . . . ."
+		"form form blogs blogs blogs blogs blogs blogs blogs blogs blogs blogs";
+
+	gap: 1.5rem;
+
+	@media (max-width: 820px) {
+
+		grid-template-areas:
+			"title"
+			"form "
+			"blogs";
+
+		margin-top: 1.3rem;
+		;
+
+	}
+
+	header {
+		grid-area: title;
+
+		h1 {
+			font-size: clamp(3rem, 0.093rem + 2.952vw, 5.75rem);
+		}
+	}
+
+	& .blogs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		align-content: start;
+		grid-area: blogs;
+		padding: 1rem;
+		background: var(--white);
+		border-radius: var(--border-radius);
+
+		.blogList {
+			background-color: var(--primary-color);
+			border-radius: var(--border-radius);
+			padding: 1rem;
+			list-style: none;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+			&:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+			}
+
+			a {
+				text-decoration: none;
+				color: var(--text-color);
+				font-size: 1.2rem;
+				font-weight: bold;
+				transition: color 0.3s ease;
+				display: block;
+
+				&:hover {
+					color: var(--cta-color);
+				}
+			}
+		}
+
+		@media (max-width: 768px) {
+			grid-template-columns: 1fr;
+		}
+	}
+}

@@ -1,0 +1,133 @@
+.comments {
+	font-family: var(--font-family);
+	width: 25rem;
+	background: var(--white);
+	padding: var(--padding);
+	border-radius: var(--border-radius);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+	h1 {
+		color: var(--primary-color);
+		margin-bottom: var(--padding);
+		font-size: 1.5em;
+		text-align: center;
+	}
+
+	.commentsAdd {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		gap: var(--padding);
+
+		textarea {
+			line-height: 1.2;
+			padding: var(--padding);
+			border: 1px solid var(--primary-color);
+			border-radius: var(--border-radius);
+			font-family: var(--font-family);
+			font-size: 1rem;
+			color: var(--secondary-color);
+			outline: none;
+			resize: none;
+			transition: border-color 0.3s ease, box-shadow 0.3s ease;
+			background: var(--white);
+		}
+
+		textarea:focus {
+			border-color: var(--cta-color);
+			box-shadow: 0 0 5px var(--cta-color);
+		}
+
+		textarea::placeholder {
+			color: #aaa;
+			font-style: italic;
+		}
+
+		button {
+			padding: var(--padding);
+			align-self: self-end;
+			background-color: var(--cta-color);
+			color: var(--text-color);
+			border: none;
+			border-radius: var(--border-radius);
+			cursor: pointer;
+			transition: background-color 0.3s;
+
+			&:hover {
+				background-color: var(--primary-hover-color);
+			}
+		}
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--padding);
+		margin-top: 2rem;
+	}
+
+	li {
+		background-color: var(--white);
+		border: 1px solid var(--primary-color);
+		border-radius: var(--border-radius);
+		padding: calc(var(--padding) * 1.5);
+		color: var(--secondary-color);
+		font-size: 0.95rem;
+		line-height: 1.4;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		position: relative;
+
+		&:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+		}
+
+		&::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 4px;
+			background-color: var(--cta-color);
+			border-top-left-radius: var(--border-radius);
+			border-bottom-left-radius: var(--border-radius);
+		}
+
+		&:empty::after {
+			content: "No comment provided";
+			font-style: italic;
+			color: #aaa;
+		}
+
+		@media (max-width: 600px) {
+			font-size: 0.85rem;
+			padding: var(--padding);
+		}
+	}
+
+	.commentMetadata {
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.85rem;
+		color: #555;
+		margin-bottom: var(--padding);
+	}
+
+	.commentAuthor {
+		font-weight: bold;
+		color: var(--primary-color);
+	}
+
+	.commentDate {
+		font-style: italic;
+		color: #777;
+	}
+
+	@media (max-width: 440px) {
+		width: 100%;
+	}
+}
