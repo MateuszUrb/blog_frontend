@@ -1,6 +1,7 @@
-import PropTypes from "prop-types";
-import { useImperativeHandle } from "react";
-import { forwardRef, useState } from "react";
+import PropTypes from "prop-types"
+import React, { useImperativeHandle } from "react"
+import { forwardRef, useState } from "react"
+import style from "./togglable.module.css"
 
 /**
  *@typedef {object} ToggleProps - parameters
@@ -15,42 +16,43 @@ const Togglable = forwardRef(
    * @returns {React.JSX.Element} - Jsx
    */
   (props, ref) => {
-    const [visable, setVisable] = useState(false);
-
-    const hiddenWhenVisable = { display: visable ? "" : "none" };
-    const showWhenVisable = { display: visable ? "none" : "" };
+    const [visible, setVisible] = useState(false)
 
     /**
-     * @returns {void} - fn return undefined
+     * @returns {void} - Toggles visibility
      */
     function toggleVisibility() {
-      setVisable(!visable);
+      setVisible(!visible)
     }
 
-    useImperativeHandle(ref, () => {
-      return {
-        toggleVisibility,
-      };
-    });
+    useImperativeHandle(ref, () => ({
+      toggleVisibility,
+    }))
 
     return (
-      <div>
-        <div style={showWhenVisable}>
-          <button onClick={toggleVisibility}>{props.buttonLabel}</button>
-        </div>
-        <div style={hiddenWhenVisable}>
-          {props.children}
-
-          <button onClick={toggleVisibility}>cancel</button>
-        </div>
+      <div
+        className={`${style.toggleContainer} ${visible ? style.expanded : ""}`}>
+        {!visible && (
+          <button className={style.toggleButton} onClick={toggleVisibility}>
+            {props.buttonLabel}
+          </button>
+        )}
+        {visible && (
+          <div>
+            {props.children}
+            <button className={style.cancelButton} onClick={toggleVisibility}>
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
-    );
-  },
-);
+    )
+  }
+)
 
-Togglable.displayName = "Togglable";
+Togglable.displayName = "Togglable"
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
-};
+}
 
-export default Togglable;
+export default Togglable

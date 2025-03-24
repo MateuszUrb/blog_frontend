@@ -8,6 +8,7 @@
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
 
+
 html {
 	line-height: 1.15;
 	/* 1 */
@@ -24,6 +25,7 @@ html {
 
 body {
 	margin: 0;
+	box-sizing: border-box;
 }
 
 /**

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { createBlog } from "../reducers/blogListReducer"
 import { displayNotificaion } from "../reducers/notificationReducer"
+import style from "./createBlog.module.css"
 
 /** @typedef {import("../types/blog").BlogProps} BlogProps */
 /** @typedef {import("../types/blog").UserProps} UserProps */
@@ -50,66 +51,68 @@ function CreateBlog() {
     })
   }
   return (
-    <>
-      <h2>add new blog</h2>
-      <form onSubmit={handleCreateBlog}>
-        <div>
-          <label htmlFor="title">
-            title:
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={blogPost.title}
-              placeholder="enter blog title"
-              onChange={(e) => {
-                setBlogPost((prevState) => ({
-                  ...prevState,
-                  [e.target.name]: e.target.value,
-                }))
-              }}
-            />
-          </label>
-        </div>
-        <div>
-          <label htmlFor="author">
-            author:
-            <input
-              type="text"
-              id="author"
-              name="author"
-              placeholder="enter blog author"
-              value={blogPost.author}
-              onChange={(e) => {
-                setBlogPost((prevState) => ({
-                  ...prevState,
-                  [e.target.name]: e.target.value,
-                }))
-              }}
-            />
-          </label>
-        </div>
-        <div>
-          <label htmlFor="url">
-            url:
-            <input
-              type="text"
-              id="url"
-              name="url"
-              value={blogPost.url}
-              placeholder="enter blog url"
-              onChange={(e) => {
-                setBlogPost((prevState) => ({
-                  ...prevState,
-                  [e.target.name]: e.target.value,
-                }))
-              }}
-            />
-          </label>
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </>
+    <form className={style.createBlog} onSubmit={handleCreateBlog}>
+      <h2>Add New Blog</h2>
+
+      <div className={style.formGroup}>
+        <label htmlFor="title">
+          Title:
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={blogPost.title}
+            placeholder="Enter blog title"
+            onChange={(e) => {
+              setBlogPost((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value,
+              }))
+            }}
+          />
+        </label>
+      </div>
+
+      <div className={style.formGroup}>
+        <label htmlFor="author">
+          Author:
+          <input
+            type="text"
+            id="author"
+            name="author"
+            placeholder="Enter blog author"
+            value={blogPost.author}
+            onChange={(e) => {
+              setBlogPost((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value,
+              }))
+            }}
+          />
+        </label>
+      </div>
+
+      <div className={style.formGroup}>
+        <label htmlFor="url">
+          Url:
+          <input
+            type="text"
+            id="url"
+            name="url"
+            value={blogPost.url}
+            placeholder="Enter blog URL"
+            onChange={(e) => {
+              setBlogPost((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value,
+              }))
+            }}
+          />
+        </label>
+      </div>
+
+      <button type="submit">Create</button>
+    </form>
   )
 }
 
